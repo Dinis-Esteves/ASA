@@ -1,11 +1,21 @@
 #include <iostream>
 #include <list>
+#include <vector>
 
 using namespace std;
 
 void printMatrix(list<int>* matrix, int numInt) {
 
-    cout << "Matriz resultante:\n"; for (int i = 0; i < numInt; i++) { for (int val : matrix[i+1]) { cout << val << " "; } cout << endl; }
+    cout << "Matriz resultante:\n"; 
+
+    for (int i = 0; i < numInt; i++) { 
+
+        for (int val : matrix[i+1]) {
+             cout << val << " "; 
+        } 
+
+        cout << endl; 
+    }
 }
 
 void printList(const list<int>& lst) { 
@@ -13,10 +23,10 @@ void printList(const list<int>& lst) {
     for (int val : lst) { cout << val << " "; } cout << endl; 
 }
 
-list<int> parseIntLine(string line) {
+vector<int> parseIntLine(string line) {
     int i = 0;
 
-    list<int> output;
+    vector<int> output;
 
     while (line[i] != '\0') {
 
