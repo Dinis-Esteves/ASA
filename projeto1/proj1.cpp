@@ -5,6 +5,10 @@
 
 using namespace std;
 
+// global variables
+vector<vector<int>> matrix;
+int sqLen, target;
+
 vector<int> parseIntLine(string line) {
     int i = 0;
 
@@ -56,7 +60,7 @@ vector<vector<int>> getMatrix(int numInt) {
     return matrix;
 }
 
-pair<vector<int>, vector<string>> getAllResults(vector<int> seq, int len, vector<vector<int>> matrix, int masterLen, int target) {
+pair<vector<int>, vector<string>> getAllResults(vector<int> seq, int len) {
     pair<vector<int>, vector<string>> rt;
 
     if (len == 1) {
@@ -75,15 +79,15 @@ pair<vector<int>, vector<string>> getAllResults(vector<int> seq, int len, vector
         vector<int> right(seq.begin() + i, seq.end());
         vector<int> left(seq.begin(), seq.begin() + i);
 
-        pair<vector<int>, vector<string>> leftResult = getAllResults(left, i, matrix, masterLen, target);
-        pair<vector<int>, vector<string>> rightResult = getAllResults(right, len - i, matrix, masterLen, target);
+        pair<vector<int>, vector<string>> leftResult = getAllResults(left, i);
+        pair<vector<int>, vector<string>> rightResult = getAllResults(right, len - i);
 
         for (int l = 0; l < static_cast<int>(leftResult.first.size()); l++) {
             for (int r = 0; r < static_cast<int>(rightResult.first.size()); r++) {
                 int result = matrix[leftResult.first[l] - 1][rightResult.first[r] - 1];
                 string exp = "(" + leftResult.second[l] + " " + rightResult.second[r] + ")";
 
-                if (len == masterLen && result == target) {
+                if (len == sqLen && result == target) {
                     pair<vector<int>, vector<string>> found;
                     found.first = {1};
                     found.second = {exp};
@@ -101,18 +105,18 @@ pair<vector<int>, vector<string>> getAllResults(vector<int> seq, int len, vector
 
 int main() {
 
-    int numInt, sqLen, result;
+    int numInt;
 
     cin >> numInt >> sqLen;
     cin.ignore(); 
 
-    vector<vector<int>> matrix = getMatrix(numInt);
+    matrix = getMatrix(numInt);
 
     vector<int> seq = getSequence();
 
-    cin >> result;
+    cin >> target;
 
-    pair<vector<int>, vector<string>> asw = getAllResults(seq, sqLen, matrix, sqLen, result);
+    pair<vector<int>, vector<string>> asw = getAllResults(seq, sqLen);
 
     if (asw.first.size() != 1) {
         cout << 0 << endl;
