@@ -7,6 +7,9 @@ using namespace std;
 
 vector<vector<int>> table; 
 
+// need to create a better track back function, probably one using the second table like
+// we do in the matrix problem. The professor sugested that we use tuple instead on the dp
+// table, cause that would lead to a lowest memory usage
 string constructExpression(vector<vector<vector<int>>>& dp, int i, int j, int result) {
     if (i == j) {
         return to_string(dp[i][i][0]); 
@@ -30,9 +33,11 @@ string constructExpression(vector<vector<vector<int>>>& dp, int i, int j, int re
     string findExpressionWithTarget(vector<int>& numbers, int target, int n) {
 
         vector<vector<vector<int>>> dp(n, vector<vector<int>>(n)); 
+
+        // initialize the numbers in the diagonal
         for (int i = 0; i < n; i++) { 
             dp[i][i].push_back(numbers[i]); 
-            } 
+        } 
                     
         for (int cl = 2; cl <= n; cl++) {
              for (int i = 0; i <= n - cl; i++) {
@@ -48,7 +53,7 @@ string constructExpression(vector<vector<vector<int>>>& dp, int i, int j, int re
                     }
                 } 
         } 
-
+// debuging print
 for (int i = 0; i < n; i++) { for (int j = 0; j < n; j++) { cout << "dp[" << i << "][" << j << "]: "; for (int k = 0; k < (int) dp[i][j].size(); k++) { cout << dp[i][j][k] << " "; } cout << endl; } }
 
         for (int i = 0; i < (int) dp[0][n - 1].size(); i++) {
@@ -67,6 +72,7 @@ for (int i = 0; i < n; i++) { for (int j = 0; j < n; j++) { cout << "dp[" << i <
         
         table.resize(maxInt, vector<int>(maxInt));
          
+        // store the input table
         for (int i = 0; i < maxInt; i++) { 
             for (int j = 0; j < maxInt; j++) { 
                 cin >> table[i][j]; 
@@ -75,12 +81,18 @@ for (int i = 0; i < n; i++) { for (int j = 0; j < n; j++) { cout << "dp[" << i <
         
         vector<int> numbers(seqLength); 
         
+        // store the input sequence
         for (int i = 0; i < seqLength; i++) { 
             cin >> numbers[i]; 
         } 
         
         int target; 
         cin >> target; 
+
+        // now that we know the target and the operator descriptor table we can know
+        // what to expect for the left and the right expressions and with that we can
+        // filter by a lot the number of stored values what causes a minor necessity
+        // of merging value as we progress in the table
 
         string result = findExpressionWithTarget(numbers, target, seqLength); 
         
