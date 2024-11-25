@@ -1,11 +1,11 @@
 compile:
-	g++ -o proj1 -g -std=c++11 -O3 -Wall proj1.cpp -lm
+	g++ -o proj-iter -g -std=c++11 -O3 -Wall proj1-iter.cpp -lm
 
 run:
-	./proj1
+	./proj-iter
 
 debug:
-	gdb -tui proj1
+	gdb -tui proj-iter
 
 clean:
-	rm proj1
+	rm proj-iter
