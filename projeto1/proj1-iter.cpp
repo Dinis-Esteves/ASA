@@ -1,4 +1,3 @@
-#include <cstdio>
 #include <iostream>
 #include <string> 
 #include <vector> 
@@ -54,7 +53,7 @@ string constructExpression(vector<vector<vector<int>>>& dp, int i, int j, int re
                 } 
         } 
 // debuging print
-for (int i = 0; i < n; i++) { for (int j = 0; j < n; j++) { cout << "dp[" << i << "][" << j << "]: "; for (int k = 0; k < (int) dp[i][j].size(); k++) { cout << dp[i][j][k] << " "; } cout << endl; } }
+//for (int i = 0; i < n; i++) { for (int j = 0; j < n; j++) { cout << "dp[" << i << "][" << j << "]: "; for (int k = 0; k < (int) dp[i][j].size(); k++) { cout << dp[i][j][k] << " "; } cout << endl; } }
 
         for (int i = 0; i < (int) dp[0][n - 1].size(); i++) {
             if (dp[0][n - 1][i] == target) {

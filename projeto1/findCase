@@ -1,0 +1,4 @@
+./gera 12 13 > input
+./recursive < input > recursive.output
+./proj-iter < input > iter.output
+diff recursive.output iter.output
