@@ -1,8 +1,6 @@
-#include <cstdio>
 #include <iostream>
 #include <set>
 #include <string>
-#include <utility>
 #include <vector> 
 
 using namespace std; 
@@ -38,17 +36,12 @@ string generateExp(pair<int, int> p) {
     pair<pair<int, int>, pair<int, int>> c; 
 
     if (p.first == p.second) {
-        return to_string(sequence[p.first - 1]);
+        return to_string(sequence[p.first]);
     } else if (p.first + 1 == p.second) {
-        //string asw = string("(%d %d)", sequence[p.first - 1], sequence[p.second - 1]);
-        
-        return "(%d %d)";
+        return "(" + to_string(sequence[p.first]) + " " + to_string(sequence[p.second]) + ")";
     } else {
-
         c = pl[p.first][p.second];
-        
-        return "(" + generateExp(c.first) + generateExp(c.second) + ")";
-
+        return "(" + generateExp(c.first) + " " + generateExp(c.second) + ")";
     }
 }
 
@@ -73,7 +66,7 @@ string findExpression(vector<int> sequence, int target, int seqLen ) {
         
             int j = i + k + 1;
 
-            printf("\nk = %d\nm[%d, %d]\n", k, i, j);
+            //printf("\nk = %d\nm[%d, %d]\n", k, i, j);
 
             int u = j;
             int v = u - 1;
@@ -96,8 +89,8 @@ string findExpression(vector<int> sequence, int target, int seqLen ) {
                         p.second.second =j;
                         dp[i][j] = target;
                         pl[i][j] = p;
-                        printdp(dp,  seqLen);
-                        printp(pl, seqLen);
+                        //printdp(dp,  seqLen);
+                        //printp(pl, seqLen);
                         break;
                     } else if (k != seqLen - 2 && valid_values.find(result) != valid_values.end()) {
                         dp[i][j] = result;
@@ -107,8 +100,8 @@ string findExpression(vector<int> sequence, int target, int seqLen ) {
                         p.second.first = u;
                         p.second.second =j;
                         pl[i][j] = p;
-                        printdp(dp,  seqLen);printf("\nm[%d, %d] op m[%d, %d]\n", i, v, u, j);
-                        printp(pl, seqLen);
+                        //printdp(dp,  seqLen);printf("\nm[%d, %d] op m[%d, %d]\n", i, v, u, j);
+                        //printp(pl, seqLen);
                         break; 
                     } else {
                     u--;
@@ -122,21 +115,10 @@ string findExpression(vector<int> sequence, int target, int seqLen ) {
 
             }
 
-            /*
-            int right = dp[i][j - 1] - 1;
-            int left = dp[i + 1 + k][j] - 1;
-
-            
-
-            dp[i][j] = table[right][left];
-
-            printdp(dp, seqLen);
-            */
             if (j == seqLen - 1) {
                 break;
                 
             }
-            //desenvolver o traceback e o escolhedor de possibilidades
 
         }
     }
@@ -183,20 +165,13 @@ int main() {
         } 
     } 
 
-    printf("%s\n", findExpression(sequence, target, seqLen).c_str());
-    
-    // now that we know the target and the operator descriptor table we can know
-    // what to expect for the left and the right expressions and with that we can
-    // filter by a lot the number of stored values what causes a minor necessity
-    // of merging value as we progress in the table
+    string resp = findExpression(sequence, target, seqLen);
 
-    /*string result = findExpressionWithTarget(numbers, target, seqLength); 
-    
-    if (result != "") { 
-        cout << 1 << endl << result << endl;
+    if (resp != "") { 
+        cout << 1 << endl << resp << endl;
     } else { 
         cout << 0 << endl; 
     } 
-    */
+    
     return 0; 
 }
