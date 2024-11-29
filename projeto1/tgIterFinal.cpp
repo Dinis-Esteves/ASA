@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 #include <tuple>
+#include <utility>
 #include <vector> 
 
 using namespace std; 
@@ -15,9 +16,25 @@ vector<vector<vector<pair<tuple<int, int, int>, tuple<int, int, int>>>>> pl;
 
 // now i have to make it span all the values combining all the current with all the previous from each side.
 // but we only store one case per result, the most to the left one, so i eventually can place a second brake conditon
-// that is when n reaches seqLen - 1, cause that means that we already have all the possible values and don't need
+// that is when n reaches maxInt, cause that means that we already have all the possible values and don't need
 // to lose time calculating the remaining and save a lot of cicles depending on the case.
 
+// Function to print a tuple of three integers
+void printTuple(const std::tuple<int, int, int>& t) {
+    std::cout << "(" 
+              << std::get<0>(t) << ", " 
+              << std::get<1>(t) << ", " 
+              << std::get<2>(t) << ")";
+}
+
+// Function to print a pair of tuples
+void printPairOfTuples(const std::pair<std::tuple<int, int, int>, std::tuple<int, int, int>>& p) {
+    std::cout << "First tuple: ";
+    printTuple(p.first);
+    std::cout << "\nSecond tuple: ";
+    printTuple(p.second);
+    std::cout << std::endl;
+}
 
 void printdp(vector<vector<vector<int>>> dp, int seqLen, int maxInt) {
 
@@ -66,15 +83,9 @@ string findExpression(vector<int> sequence, int target, int seqLen, int maxInt) 
 
     pl.resize(seqLen); for (int i = 0; i < seqLen; ++i) { pl[i].resize(seqLen, vector<pair<tuple<int, int, int>, tuple<int, int, int>>>(maxInt)); }    
 
-   // initialize the diagonal of the tables
+   // initialize the diagonal of the table
     for (int i = 0; i < seqLen; i++) {
-            pair<tuple<int, int, int>, tuple<int, int, int>> p;
-            get<0>(p.first) = i;
-            get<1>(p.first) = i;
-            get<0>(p.second) = i;
-            get<1>(p.second) = i;
             dp[i][i][0] = sequence[i];
-            pl[i][i][0] = p;
     }
 
     //printdp(dp, seqLen, maxInt);
@@ -92,10 +103,6 @@ string findExpression(vector<int> sequence, int target, int seqLen, int maxInt) 
 
                 if (n == maxInt) {break;}
 
-                // n represents the number of values. it allows to store the values by how much to the left they are
-                // the st stores the result we already store so that i don't have to check the vector, that as
-                // lenght seqLen, for every single calculation i do
-
                 // l and m represents the span of all the value combinations between two positions
                 for (int l = 0; l < maxInt - 1; l++) {
                         if (n == maxInt) {break;}
@@ -103,55 +110,74 @@ string findExpression(vector<int> sequence, int target, int seqLen, int maxInt) 
 
                         if (n == maxInt) {break;}
 
-                        int right = dp[i][v][l] - 1;
-                        int left = dp[u][j][m] - 1;
+                        int left = dp[i][v][l] - 1;
+                        int right = dp[u][j][m] - 1;
 
+                        if (right < 0 || left < 0) {break;}
 
                         //printf("i: %d, j: %d, k: %d\n", i, j, k);
                         //printf("r: %d, l: %d\n", right, left);
 
                         if (left >= 0 && right >= 0) {
-                            int result = table[right][left];
-                            //printf("result: %d\n", result);
-                            //printf("bool: %d\n", stored_results.find(result) == stored_results.end());
-                            //case when we are calculating the final options and find one that fits in the result
-                            if (k == seqLen - 2 && result == target) {
-                                pair<tuple<int, int, int>, tuple<int, int, int>> p;
-                                
-                                get<0>(p.first) = i;
-                                get<1>(p.first) = v;
-                                get<2>(p.first) = l;
-                                get<0>(p.second) = u;
-                                get<1>(p.second) = j;
-                                get<2>(p.second) = m;
-                                dp[i][j][n] = target;
-                                pl[i][j][n] = p;
+                          int result = table[left][right];
+                          //printf("Processing: i=%d, j=%d, n=%d, result=%d\n", i, j, n, result);
+                          // printf("result: %d\n", result);
+                          // printf("bool: %d\n", stored_results.find(result)
+                          // == stored_results.end()); case when we are
+                          // calculating the final options and find one that
+                          // fits in the result
+                          if (k == seqLen - 2 && result == target) {
+                            pair<tuple<int, int, int>, tuple<int, int, int>> p;
 
-                                //printdp(dp, seqLen, maxInt);
-                                tuple<int, int, int> p2;
-                                get<0>(p2) = 0;
-                                get<1>(p2) = seqLen - 1;
-                                get<2>(p2) = 0;
-                                return generateExp(p2);
+                            get<0>(p.first) = i;
+                            get<1>(p.first) = v;
+                            get<2>(p.first) = l;
+
+                            get<0>(p.second) = u;
+                            get<1>(p.second) = j;
+                            get<2>(p.second) = m;
+
+                            dp[i][j][0] = target;
+                            pl[i][j][0] = p;
+
+                              pair<tuple<int,int, int>, tuple<int, int, int>> c = pl[i][j][n];
+                            printf("(%d, %d, %d)\n", i, j, n);
+                              printPairOfTuples(c);
+                              printf("\n");
+
+                            //printdp(dp, seqLen, maxInt);
+                            tuple<int, int, int> p2;
+                            get<0>(p2) = 0;
+                            get<1>(p2) = seqLen - 1;
+                            //get<2>(p2) = 0;
+                            //printf("Target reached: %d at dp[%d][%d][%d]\n", result, i, j, n);
+                            return generateExp(p2);
                             } else if (k != seqLen - 2 && stored_results.find(result) == stored_results.end()) {
-                                dp[i][j][n] = result;
-                                //printdp(dp, seqLen, maxInt);
-                                // eventually we have to store in wich index the previous value was stored
-                                // so we won't have a pair but 3 numbers instead, i, j represent the place in
-                                // the sequence and l/m represent the index in the previous value we got it
-                                // since it can have multiple values now, from 1 to seqLen values
-                                pair<tuple<int, int, int>, tuple<int, int, int>> p;
-                                get<0>(p.first) = i;
-                                get<1>(p.first) = v;
-                                get<2>(p.first) = l;
-                                get<0>(p.second) = u;
-                                get<1>(p.second) = j;
-                                get<2>(p.second) = m;
-                                pl[i][j][n] = p;
-                                stored_results.insert(result);
-                                n++;
+                              dp[i][j][n] = result;
+                              // printdp(dp, seqLen, maxInt);
+
+                              pair<tuple<int, int, int>, tuple<int, int, int>> p;
+
+                              get<0>(p.first) = i;
+                              get<1>(p.first) = v;
+                              get<2>(p.first) = m;
+
+                              get<0>(p.second) = u;
+                              get<1>(p.second) = j;
+                              get<2>(p.second) = l;
+
+                              pl[i][j][n] = p;
+
+                              pair<tuple<int,int, int>, tuple<int, int, int>> c = pl[i][j][n];
+
+                              printf("(%d, %d, %d)\n", i, j, n);
+                              printPairOfTuples(c);
+                              printf("\n");
+                              
+                              stored_results.insert(result);
+                              //printf("Stored result: %d at dp[%d][%d][%d]\n", result, i, j, n);
+                              n++;
                             }
-                        
                         } 
                     }
                 }
