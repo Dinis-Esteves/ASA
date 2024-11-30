@@ -1,9 +1,7 @@
-#include <cstdio>
 #include <iostream>
 #include <set>
 #include <string>
 #include <tuple>
-#include <utility>
 #include <vector> 
 
 using namespace std; 
@@ -50,19 +48,6 @@ void printdp(vector<vector<vector<int>>> dp, int seqLen, int maxInt) {
     }
     printf("\n");
 }
-
-
-void printp(vector<vector<vector<pair<tuple<int, int, int>, tuple<int, int, int>>>>> lp, int seqLen, int maxInt) {
-        for(int i = 0; i < seqLen; i++) {
-            for(int j = 0; j < seqLen; j++) {
-                for (int k = 0; k < maxInt; k++) {
-                    
-                }
-            }
-        printf("\n");
-    }
-}
-
 
 string generateExp(tuple<int, int, int> p) {
     pair<tuple<int, int, int>, tuple<int, int, int>> c; 
@@ -140,10 +125,10 @@ string findExpression(vector<int> sequence, int target, int seqLen, int maxInt) 
                             dp[i][j][0] = target;
                             pl[i][j][0] = p;
 
-                              pair<tuple<int,int, int>, tuple<int, int, int>> c = pl[i][j][n];
-                            printf("(%d, %d, %d)\n", i, j, n);
-                              printPairOfTuples(c);
-                              printf("\n");
+                              //pair<tuple<int,int, int>, tuple<int, int, int>> c = pl[i][j][n];
+                              //printf("(%d, %d, %d)\n", i, j, n);
+                              //printPairOfTuples(c);
+                              //printf("\n");
 
                             //printdp(dp, seqLen, maxInt);
                             tuple<int, int, int> p2;
@@ -160,22 +145,36 @@ string findExpression(vector<int> sequence, int target, int seqLen, int maxInt) 
 
                               get<0>(p.first) = i;
                               get<1>(p.first) = v;
-                              get<2>(p.first) = m;
+                              get<2>(p.first) = l;
 
                               get<0>(p.second) = u;
                               get<1>(p.second) = j;
-                              get<2>(p.second) = l;
+                              get<2>(p.second) = m;
 
                               pl[i][j][n] = p;
 
-                              pair<tuple<int,int, int>, tuple<int, int, int>> c = pl[i][j][n];
+                              //pair<tuple<int,int, int>, tuple<int, int, int>> c = pl[i][j][n];
 
-                              printf("(%d, %d, %d)\n", i, j, n);
-                              printPairOfTuples(c);
-                              printf("\n");
-                              
+                              //printf("(%d, %d, %d)\n", i, j, n);
+                              //printPairOfTuples(c);
+                              //printf("\n");
+                              /*
+                              if (i == 0 && j == 3) {
+                              tuple<int, int, int> d;
+                              get<0>(d) = i;
+                              get<1>(d) = j;
+                              get<2>(d) = n;
+
+
+                              printPairOfTuples(p);
+
+                              printf("Stored result: %d at dp[%d][%d][%d]\n", result, i, j, n);
+                              printf("%s\n\n", generateExp(d).c_str());
+                              }
+                            */
+
                               stored_results.insert(result);
-                              //printf("Stored result: %d at dp[%d][%d][%d]\n", result, i, j, n);
+                              
                               n++;
                             }
                         } 
